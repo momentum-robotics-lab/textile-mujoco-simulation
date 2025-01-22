@@ -1,0 +1,77 @@
+<mujoco>
+  <option density="1.2" viscosity="0.00002">
+    <!-- <flag constraint="disable" energy="enable"/> -->
+  </option>
+
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="120" elevation="-20"/>
+  </visual>
+
+  <asset>
+        <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+        <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+                 markrgb="0.8 0.8 0.8" width="300" height="300"/>
+        <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+  </asset>
+
+
+
+<worldbody>
+  <body mocap="true" name="mocap_L" pos="-0.225 0.175 1">
+      <!-- <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="mocap_left_site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="mocap_left_site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="mocap_left_site3" rgba="1 0 0 1"/> -->
+  </body>
+  <body mocap="true" name="mocap_R" pos="-0.225 -0.225 1">
+      <!-- <site pos="0 0 0.075" size="0.003 0.003 0.1" type="box" name="mocap_right_site1" rgba="0 0 1 1"/>
+      <site pos="0 0.075 0" size="0.003 0.1 0.003" type="box" name="mocap_right_site2" rgba="0 1 0 1"/>
+      <site pos="0.075 0 0" size="0.1 0.003 0.003" type="box" name="mocap_right_site3" rgba="1 0 0 1"/> -->
+  </body>
+<body pos="-0.5 0 0.28" quat="0.707 0 0.707 0">
+  <composite type="grid" count="9 9" spacing="0.05" offset="0 0 0.5">
+    <joint kind="main" type="free" stiffness="0.01" damping="0.01" frictionloss="0" armature="0"/>
+    <skin inflate="0.001" subgrid="3" texcoord="true"/>
+    <geom size=".02"/>
+    
+  </composite>
+</body>
+
+
+<body name="anchor_left" pos="-0.225 0.175 1">
+  <geom type="sphere" size="0.01" rgba="1 0 0 1" group="3"/>
+  <site name="anch_left" pos="0 0 0" group="3"/>
+</body>
+
+<body name="anchor_right" pos="-0.225 -0.225 1">
+  <geom type="sphere" size="0.01" rgba="0 1 0 1" group="3"/>
+  <site name="anch_right" pos="0 0 0" group="3"/>
+</body>
+
+<geom type="plane" size="1 1 0.01" rgba=".2 0 0 1"/>
+</worldbody>
+
+
+<equality>
+  <weld body1="mocap_L" body2="B0_8"/>
+  <weld body1="mocap_R" body2="B0_0"/>
+
+  <weld body1="anchor_left" body2="B0_8"/>
+  <weld body1="anchor_right" body2="B0_0"/>
+</equality>
+
+</mujoco>
+
+  
+
+
+
+
+  <!-- <composite type="grid" count="9 9 1" spacing="0.05" offset="0 0 1">
+    <joint kind="main" type="free" stiffness="0" damping="0" frictionloss="0" armature="0"/>
+    <skin inflate="0.001" subgrid="3" texcoord="true"/>
+    <geom size=".02"/>
+    <pin coord="0 0"/>
+    <pin coord="8 0"/>
+  </composite> -->

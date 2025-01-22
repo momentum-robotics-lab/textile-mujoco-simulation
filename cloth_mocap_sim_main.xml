@@ -1,0 +1,143 @@
+<mujoco model="cloth_folding">
+  <size nconmax="3000" njmax="10000" nstack="1000000"/>
+  <option timestep="0.0002" solver="Newton" tolerance="1e-8"/>
+
+  <!-- Robot-independent common environment settings -->
+  <!-- <compiler texturedir="./textures/" /> -->
+
+  <!-- Robot-independent models -->
+  <include file="skybox.xml"/>
+  <include file="visual.xml"/>
+  <include file="materials.xml"/>
+
+  <asset>
+    <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2" width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>  
+    <material name="matplane" texture="texplane"/>
+    <texture name="texcarpet" type="2d" file="carpet.png"/>
+    <material name="matcarpet" texture="texcarpet"/>  
+  </asset>
+
+  <worldbody>
+    <!-- Ground plane -->
+    <geom name="ground" type="plane" size="1 1 0.1" pos="0 0 0" quat="1 0 0 0" material="matplane" condim="1"/>
+    
+    <!-- Mocap body for cloth control -->
+    <body name="cloth_mocap" mocap="true" pos="0.915 -0.36 0.46" quat="0.0 0.0 0.0 1.0">
+      <geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.7" size="0.005 0.005 0.005" type="box"/>
+      <geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.1" size="1 0.005 0.005" type="box"/>
+      <geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.1" size="0.005 1 0.001" type="box"/>
+      <geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.1" size="0.005 0.005 1" type="box"/>
+    </body>
+    
+    <!-- Cloth grid -->
+    <body name="AA_0" pos="0.675 0.04 0.46">
+      <freejoint/>
+      <composite type="grid" count="7 10 1" spacing="0.08" flatinertia="0.01">
+        <joint kind="main" damping="0.001"/>
+        <skin rgba="1 0 0 1" texcoord="true" inflate="0.005" subgrid="2"/>
+        <geom type="capsule" size="0.015 0.015" rgba=".8 .2 .1 1" friction="1.5 1.5 1.5"/>
+      </composite>
+    </body>
+
+    <!-- Bed and bed frame -->
+    <body name="bed-top" pos="0.68 0 0.43">
+      <geom name="bed-top" size="0.335 0.46 0.03" rgba="0.1 0.1 1 1" type="box" mass="50" condim="6"/>
+    </body>
+
+    <body name="bed" pos="0.68 0 0.2">
+      <geom name="bed" size="0.335 0.46 0.20" type="box" mass="20" rgba="0.2 0.1 1 1" condim="3"/>
+    </body>
+  </worldbody>
+
+  <!-- Equality constraints -->
+  <equality>
+    <weld name="cloth_mocap_weld" body1="cloth_mocap" body2="B3_6"/>
+  </equality>
+</mujoco>
+
+
+
+<!-- <mujoco model="cloth_folding">
+  <size nconmax="3000" njmax="10000" nstack="1000000"/>
+  <option timestep="0.0002" solver="Newton" tolerance="1e-8"/>
+
+  <!-- Robot independent common enviromnet settings -->
+  <!-- <compiler texturedir="./textures/" /> -->
+
+  <!-- Robot independent models -->
+  <include file="skybox.xml"/>
+  <include file="visual.xml"/>
+  <include file="materials.xml"/>
+
+  <asset>
+    <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2" width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>  
+    <material name="matplane" texture="texplane"/>
+    <texture name="texcarpet" type="2d" file="carpet.png"/>
+    <material name="matcarpet" texture="texcarpet" />  
+  </asset>
+
+ <worldbody>
+   <geom name="ground" type="plane" size="0 0 1" pos="0 0 0" quat="1 0 0 0" material="matplane" condim="1"/>
+ </worldbody>
+
+  <!-- add mocap to control the endeffector -->
+<worldbody>
+
+  <!-- pos="0.915 -0.36 0.46".     For Grid: pos="0.875 -0.2 0.46" -->
+  <body name="cloth_mocap" mocap="true" pos="0.915 -0.36 0.46" quat="0.0 0.0 0.0 1.0">
+    <geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.7" size="0.005 0.005 0.005" type="box"></geom>
+    <geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.1" size="1 0.005 0.005" type="box"></geom>
+    <geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.1" size="0.005 1 0.001" type="box"></geom>
+    <geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.1" size="0.005 0.005 1" type="box"></geom>
+  </body>
+
+
+</worldbody>
+
+  <equality>
+        <weld name="cloth_mocap_weld" body1="cloth_mocap" body2="B3_6" ></weld>
+        <!-- <weld name="cloth_mocap_weld" body1="cloth_mocap" body2="B9_0" ></weld> -->
+   </equality>
+
+   
+  
+  <!-- add bed making specific environment settings -->
+
+  <!-- add a bed -->
+  <worldbody>
+
+<body name="B3_6" pos="0.675 0.04 0.46">
+      <freejoint/>
+      <composite  type="grid" count="7 10 1" spacing="0.08" flatinertia="0.01"> <!--type="cloth"-->
+        <joint kind="main" damping="0.001"/>
+        <!-- <skin material="matcarpet" texcoord="true" inflate="0.005" subgrid="2"/> -->
+        <skin rgba="1 0 0 1" texcoord="true" inflate="0.005" subgrid="2"/>
+        <geom type="capsule" size="0.015 0.015" rgba=".8 .2 .1 1" friction="1.5 1.5 1.5" />
+
+      </composite>
+    </body>
+
+
+</worldbody>
+
+<worldbody>
+
+  <!-- add bed frame -->
+  <body name="bed-top" pos="0.68 0 0.43" >
+    <geom name="bed-top" size="0.335 0.46 0.03" rgba="0.1 0.1 1 1" type="box" mass="50" condim="6"></geom>
+  </body>
+
+  <body name="bed" pos="0.68 0 0.2" >
+    <geom name="bed" size="0.335 0.46 0.20" type="box" mass="20" rgba="0.2 0.1 1 1" condim="3"></geom>
+  </body>
+
+
+
+</worldbody>
+
+ 
+
+
+
+   
+</mujoco> -->
