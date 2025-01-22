@@ -20,6 +20,8 @@ counter = 5
 def trajectory(x):
     return 2/x
 
+def trajectory_x(counter):
+
 def get_point(trajectory_function, mocap_pos):
     global counter
     mocap_pos[:,0] += 0.01
