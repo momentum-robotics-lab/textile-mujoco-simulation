@@ -1,7 +1,8 @@
 import mujoco
 import mujoco.viewer
 
-from mocap_move import key_callback_data, get_point, step_trajectory
+# from mocap_move import key_callback_data, get_point, step_trajectory
+from mocap_move2 import get_point, step_trajectory
 import time
 
 
@@ -17,7 +18,7 @@ def main():
     with mujoco.viewer.launch_passive(model, data) as viewer:
         # Close the viewer automatically after 30 wall-seconds.
         start = time.time()
-        while viewer.is_running() and time.time() - start < 5:
+        while viewer.is_running() and time.time() - start < 2:
             # breakpoint()
             mujoco.mj_step(model,data) # let cloth settle down
             viewer.sync()
